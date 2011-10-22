@@ -1,11 +1,23 @@
-var csv = require('csv');
+/*  simple script to migrate dat from old version of Mydvds
+ *  expects data files to be csv format and in subfolder named 'data'
+ */
 
+var csv = require('csv'),
+    type = process.argv[2], //first arg on cli
+    loaders = {};
+
+
+loaders.users = function (data) {
+    console.log("loading user:"+data['EMAIL']);
+}
+
+console.log(this.loadusers);
 
 csv()
-.fromPath('data/users.csv', { "columns" : true} )
-.on('data',function(data,index){
+.fromPath('data/'+type+'.csv', { "columns" : true} )
+.on('data',function(data, index){
     //console.log('#'+index+' '+JSON.stringify(data));
-    console.log("email:"+data["EMAIL"]);
+    loaders[type](data);
 })
 .on('end',function(count){
     console.log('Number of lines: '+count);
@@ -14,6 +26,3 @@ csv()
     console.log(error.message);
 });
 
-function loadUser(data) {
-
-}
