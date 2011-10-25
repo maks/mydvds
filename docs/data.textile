@@ -1,0 +1,31 @@
+h1. Data Stuctures fo Mydvds
+
+h2. Users
+
+Represented as Hashes, with ID as the key.
+
+h3. Fields
+
+* email (string)
+* firstname (string)
+* lastname (string)
+* joinDate (date)
+* lastLogin (datetime)
+* status (string enum: pending, confirmed, subscriber)
+* referredBy (userid)
+
+
+h2. Dvds
+
+Represented as Hashes, with ID as the key.
+
+h3. Fields
+
+* title (string)
+* barcode (string)
+* status (string enum: public, private, pending)
+* addedBy (userid)
+* addedOn (datetime)
+* modifiedOn (datetime)
+
+
