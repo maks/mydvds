@@ -2,7 +2,8 @@ h1. Data Stuctures fo Mydvds
 
 h2. Users
 
-Represented as Hashes, with ID as the key.
+*Type:* HASH
+*Keyname:* user:<userid>
 
 h3. Fields
 
@@ -17,7 +18,8 @@ h3. Fields
 
 h2. Dvds
 
-Represented as Hashes, with ID as the key.
+*Type:* HASH
+*Keyname:* dvd:<dvdid>
 
 h3. Fields
 
@@ -29,3 +31,31 @@ h3. Fields
 * modifiedOn (datetime)
 
 
+h2. Loans
+
+*Type:* HASH
+*Keyname:* loan:<loanid>
+
+Each item in SET is ID of a Loan HASH.
+
+h3. Fields
+
+* lendee ID (userid)
+* lend_date  (datetime)
+* return_date  (datetime)
+* list_item_id  (itemid)
+* lender_id (userid)
+* lender_email (email)
+
+h3. Users loans
+
+*Type:* SET
+*Keyname:* loans:<userid>
+
+
+h2. Friends
+
+h3. Users loans
+
+*Type:* SET
+*Keyname:* friends:<userid>
