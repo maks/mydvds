@@ -1,0 +1,15 @@
+fishpond.com.au
+
+Images:
+http://cdn4.fishpond.co.nz/5014437102133-crop-120x120.jpg
+http://cdn1.fishpond.co.nz/9397710305992-crop-325x325.jpg
+cdn1-cdn4
+
+Metadata:
+http://www.fishpond.com.au/Movies/advanced_search_result.php?&keywords=9397710305992
+
+To get DVD title from search result:
+content.match(/<title>Fishpond.co.nz: (.*)-/);
+
+"Sell Yours"
+https://www.fishpond.com.au/sellyours/sell/?barcode=9397710305992
