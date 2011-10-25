@@ -1,11 +1,17 @@
 {
-  "name": "mydvds",
-  "description": "A webapp for managing DVD collections",
-  "author": "Maksim Lin <maks@manichord.com>",
-  "dependencies": {
-    "csv": "= 0.0.10",
-    "redis": "= 0.6.7",
-    "request": "=2.1.1"
-  },
-  "engine": "node 0.5.10"
+    "name": "mydvds",
+    "version" : "0.0.1",
+    "description": "A webapp for managing DVD collections",
+    "author": {
+        "name": "Maksim Lin",
+        "email": "maks@manichord.com",
+        "url": "http://manichord.com"
+    },
+    "main": "server.js",
+    "dependencies": {
+        "csv": "= 0.0.10",
+        "redis": "= 0.6.7",
+        "request": "= 2.1.1"
+    },
+  "engine": "node 0.5.x"
 }
