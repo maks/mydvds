@@ -1,4 +1,4 @@
-h1. Data Stuctures fo Mydvds
+h1. Data Stuctures for Mydvds
 
 h2. Users
 
@@ -15,6 +15,11 @@ h3. Fields
 * status (string enum: pending, confirmed, subscriber)
 * referredBy (userid)
 
+h3. All Users
+
+*Type:* SET
+*Keyname:* users_all
+
 
 h2. Dvds
 
@@ -30,13 +35,16 @@ h3. Fields
 * addedOn (datetime)
 * modifiedOn (datetime)
 
+h3. All Dvds
+
+*Type:* SET
+*Keyname:* dvds_all
 
 h2. Loans
 
 *Type:* HASH
 *Keyname:* loan:<loanid>
 
-Each item in SET is ID of a Loan HASH.
 
 h3. Fields
 

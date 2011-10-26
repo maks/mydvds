@@ -6,6 +6,9 @@ http://cdn1.fishpond.co.nz/9397710305992-crop-325x325.jpg
 cdn1-cdn4
 
 Metadata:
+http://www.fishpond.co.nz/Movies/DVD_Movies/9397710305992
+
+or via search:
 http://www.fishpond.com.au/Movies/advanced_search_result.php?&keywords=9397710305992
 
 To get DVD title from search result:
