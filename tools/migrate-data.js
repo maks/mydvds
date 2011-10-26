@@ -40,8 +40,7 @@ loaders.users = function (data) {
 };
 
 loaders.dvds = function(data) {
-    var id = prepID(data),
-        i;
+    var id = prepID(data);
 
     delete data['type'];
     delete data['ref_id'];
@@ -50,6 +49,13 @@ loaders.dvds = function(data) {
     console.log("loading dvd:"+data['title']);
     client.hmset("dvd:"+id, data);
     client.sadd("dvds_all", id);
+};
+
+loaders.collections = function (data) {
+    console.log("loading collection:"+data['dvd_id']+"->"+data['list_id']);
+    client.zadd("collection:"+data['list_id'], Date.now(), data['dvd_id'], function(err) {
+        console.error("failed:"+err);
+    });
 };
 
 csv()

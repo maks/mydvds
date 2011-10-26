@@ -3,7 +3,7 @@ h1. Data Stuctures for Mydvds
 h2. Users
 
 *Type:* HASH
-*Keyname:* user:<userid>
+*Keyname:* user:<user_id>
 
 h3. Fields
 
@@ -13,7 +13,7 @@ h3. Fields
 * joinDate (date)
 * lastLogin (datetime)
 * status (string enum: pending, confirmed, subscriber)
-* referredBy (userid)
+* referredBy (user_id)
 
 h3. All Users
 
@@ -31,7 +31,7 @@ h3. Fields
 * title (string)
 * barcode (string)
 * status (string enum: public, private, pending)
-* addedBy (userid)
+* addedBy (user_id)
 * addedOn (datetime)
 * modifiedOn (datetime)
 
@@ -43,22 +43,40 @@ h3. All Dvds
 h2. Loans
 
 *Type:* HASH
-*Keyname:* loan:<loanid>
+*Keyname:* loan:<loan_id>
 
 
 h3. Fields
 
-* lendee ID (userid)
+* lendee ID (user_id)
 * lend_date  (datetime)
 * return_date  (datetime)
-* list_item_id  (itemid)
-* lender_id (userid)
+* list_item_id  (item_id)
+* lender_id (user_id)
 * lender_email (email)
 
 h3. Users loans
 
 *Type:* SET
-*Keyname:* loans:<userid>
+*Keyname:* loans:<user_id>
+
+h2. Collections
+
+Each user has one or more lists.
+All users start with a predefined list called 'mydvds'.
+
+h3. Collection
+
+*Type:* ZSET
+*Keyname:* collection:<user_id>:collection_name
+
+Each value in the set is a dvd_id.
+
+Sorted set is used to allow users to create arbitrary display sort order for the
+set of their dvds within a collection.
+
+A list of all users collections is not kept, instad can be fetched using redis
+keys wildcarded search.
 
 
 h2. Friends
@@ -66,4 +84,5 @@ h2. Friends
 h3. Users loans
 
 *Type:* SET
-*Keyname:* friends:<userid>
+*Keyname:* friends:<user_id>
+
