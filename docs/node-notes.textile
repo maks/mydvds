@@ -1,0 +1,13 @@
+Node Notes:
+
+
+h2. Session Middleware
+
+* http://node-js.ru/3-writing-express-middleware
+* http://nodetuts.com/tutorials/13-authentication-in-express-sessions-and-route-middleware.html
+
+
+h2.Oauth
+
+* https://github.com/ciaranj/node-oauth
+* https://github.com/keybuk/node-express-oauth

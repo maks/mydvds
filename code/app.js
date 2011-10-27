@@ -4,40 +4,62 @@
 "use strict";
 
 var log = require('nlogger').logger(module),
-    app = require('express').createServer(),
-    redis = require('redis'),
-    client = redis.createClient(),
+    sys = require('sys'),
+    express = require('express'),
+    app = express.createServer(),
+    model = require('./model'),
 
     PORT = 3000; //FIXME - put into env specific config
 
-app.get('/', function(req, res){
-  res.send('hello world');
+app.configure('development', function(){
+    app.use(express.bodyParser());
+    app.use(express.static('static'));
 });
 
-app.get('/user/:id/:operation?', function(req, res){
-    var user, dvds;
+app.configure('production', function() {
+    app.use(express.logger());
+    app.use(express.bodyParser());
+    app.use(express.static('/var/www/mydvds.com.au/html'));
+});
+
+log.info("serving static from:"+ 'static');
+
+app.get('/', function(req, res, next){
+    res.redirect('/home.html');
+});
+
+app.get('/api', function(req, res, next){
+    //FIXME authenticate user
+
+    next();
+});
+
+app.get('/api/user/:id/:operation?', function(req, res){
+    var user,
+        dvds,
+        dvdList,
+        start = 0,
+        end = 10;
 
     if (req.params.operation) {
-        client.zrange(['collection',req.params.id,'mydvds'].join(':'), 0, -1, function(err, data) {
+        model.getDvdList(req.params.id, start, end, function(err, dvds) {
             if (err) {
-                res.send('Sorry Error Occurred');
-                log.error('Error: ' + err);
+                log.error(err);
             } else {
-                user = data;
-                res.send('dvds: ' + data);
+                res.send("Dvds:" + sys.inspect(dvds));
             }
         });
 
     } else {
-        client.hgetall('user:'+req.params.id, function (err, data) {
-            if (err) {
-                res.send('Sorry Error Occurred');
-                log.error('Error: ' + err);
-            } else {
-                user = data;
-                res.send('user ' + data.email);
-            }
-        });
+        //~ client.hgetall('user:'+req.params.id, function (err, data) {
+            //~ if (err) {
+                //~ res.send('Sorry Error Occurred');
+                //~ log.error('Error: ' + err);
+            //~ } else {
+                //~ user = data;
+                //~ res.send('user ' + data.email);
+            //~ }
+        //~ });
     }
 });
 
