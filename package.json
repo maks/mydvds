@@ -12,6 +12,7 @@
         "csv": "= 0.0.10",
         "redis": "= 0.6.7",
         "request": "= 2.1.1",
+        "http-get": "",
         "express" : "= 2.5.0",
         "nlogger" : ""
     },

@@ -4,10 +4,14 @@
 "use strict";
 
 var log = require('nlogger').logger(module),
-    sys = require('sys'),
+    util = require('util'),
+    fs = require('fs'),
+    path = require('path'),
+    http = require('http-get'),
     express = require('express'),
     app = express.createServer(),
     model = require('./model'),
+    misc = require('./misc'),
 
     PORT = 3000; //FIXME - put into env specific config
 
@@ -34,6 +38,33 @@ app.get('/api', function(req, res, next){
     next();
 });
 
+app.get('/images/:size/:barcode.jpg', function(req, res, next){
+    var sizeUrls = {
+            'small' : '-crop-120x120.jpg',
+            'large' : '-crop-325x325.jpg'
+        },
+        cachedImg,
+        cdnServerNumber = misc.getRandomInt(1,4),
+        imagePath = ['static/images',req.params.size,req.params.barcode].join('/')+'.jpg',
+        options = {url: 'http://cdn'+cdnServerNumber+'.fishpond.co.nz/'+req.params.barcode+sizeUrls[req.params.size]};
+
+    if (path.existsSync(imagePath)) {
+        log.info("found cached image:"+req.params.barcode+"["+req.params.size+"]");
+        next(); //let static middleware serve the image
+    } else {
+        log.info("no cached image, fetching..."+options.url);
+        http.get(options, imagePath, function (error, result) {
+            if (error) {
+                console.error(error);
+            } else {
+                console.log('File downloaded at: ' + result.file);
+                res.sendfile(imagePath);
+            }
+        });
+    }
+});
+
+
 app.get('/api/user/:id/:operation?', function(req, res){
     var user,
         dvds,
@@ -46,11 +77,12 @@ app.get('/api/user/:id/:operation?', function(req, res){
             if (err) {
                 log.error(err);
             } else {
-                res.send("Dvds:" + sys.inspect(dvds));
+                res.send("Dvds:" + util.inspect(dvds));
             }
         });
 
-    } else {
+    }
+    //~ else {
         //~ client.hgetall('user:'+req.params.id, function (err, data) {
             //~ if (err) {
                 //~ res.send('Sorry Error Occurred');
@@ -60,7 +92,7 @@ app.get('/api/user/:id/:operation?', function(req, res){
                 //~ res.send('user ' + data.email);
             //~ }
         //~ });
-    }
+    //~ }
 });
 
 app.listen(PORT);
