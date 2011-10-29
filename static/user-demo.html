@@ -2,12 +2,62 @@
 <html lang="en">
 <head>
     <title>user demo</title>
-    <meta charset="UTF-8">
-    <link href="css/all.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="js/jquery-1.6.3.js"></script>
+
+    <!--link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.css" />
+	<script src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.js"></script -->
+
+
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.css" />
+    <link href="css/user-demo.css" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-1.6.4.js"></script>
+    <script src="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.js"></script>
+    <!--script src="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.js"></script -->
+
+
     <script type="text/javascript" src="js/user-demo.js"></script>
+
+
 </head>
 <body>
+
+<div id="main" data-role="page">
+    <div data-role="header" >
+        <h1 >Your Collections</h1>
+    </div>
+    <div class="content" data-role="content">
+
+        <ul data-role="listview">
+            <li><a href="#mydvds">My Dvds</a><span class="ui-li-count">200</span>
+</li>
+            <li><a href="#wishlist">My Wish List</a><span class="ui-li-count">42</span>
+</li>
+        </ul>
+    </div>
+    <div data-role="footer"><h1>mydvds.com.au</h1></div>
+</div>
+
+
+<div id="mydvds" data-role="page">
+<div  data-role="header" >
+    <h1>Maksim's Dvds</h1>
+</div>
+
+<div id="dvdlist_content" class="content" data-role="content">
+
+    <!-- ul data-role="listview">
+        <li id="0"><img src="/images/small/9398520611037.jpg">10 Things I Hate About You (Rerelease)</li>
+        <li id="1"> <img src="/images/small/9315841999118.jpg">Amelie </li>
+        <li id="2"> <img src="/images/small/5050582036046.jpg">American Pie Uncut (Rerelease) </li>
+        <li id="3"> <img src="/images/small/9397710320599.jpg">Aussie Fit Total Body Toning </li>
+    </ul -->
+
+</div>
+
+<div data-role="footer"><h1>mydvds.com.au</h1></div>
+</div>
+
 
 </body>
 </html>

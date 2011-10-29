@@ -1,5 +1,5 @@
 {
-    "color": "auto",
+    "color": "",
     "level": {
         "*": "debug"
     }

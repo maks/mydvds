@@ -1,4 +1,4 @@
-h1. Data Stuctures for Mydvds
+h1. Data Model for Mydvds
 
 h2. Users
 

@@ -46,7 +46,8 @@ app.get('/images/:size/:barcode.jpg', function(req, res, next){
         cachedImg,
         cdnServerNumber = misc.getRandomInt(1,4),
         imagePath = ['static/images',req.params.size,req.params.barcode].join('/')+'.jpg',
-        options = {url: 'http://cdn'+cdnServerNumber+'.fishpond.co.nz/'+req.params.barcode+sizeUrls[req.params.size]};
+        options = {url: 'http://cdn'+cdnServerNumber+'.fishpond.co.nz/'+req.params.barcode+sizeUrls[req.params.size]},
+        BLANK_COVER_LINK = '../icons/blank-cover-'+req.params.size+'.jpg';
 
     if (path.existsSync(imagePath)) {
         log.info("found cached image:"+req.params.barcode+"["+req.params.size+"]");
@@ -55,11 +56,16 @@ app.get('/images/:size/:barcode.jpg', function(req, res, next){
         log.info("no cached image, fetching..."+options.url);
         http.get(options, imagePath, function (error, result) {
             if (error) {
-                console.error(error);
+                console.error("Error downloading images:"+error);
+                try {
+                    fs.symlinkSync(BLANK_COVER_LINK, imagePath);
+                } catch(err) {
+                    log.error("error linking "+BLANK_COVER_LINK+" to filepath "+imagePath+" :"+err);
+                }
             } else {
                 console.log('File downloaded at: ' + result.file);
-                res.sendfile(imagePath);
             }
+            res.sendfile(imagePath);
         });
     }
 });
@@ -70,14 +76,14 @@ app.get('/api/user/:id/:operation?', function(req, res){
         dvds,
         dvdList,
         start = 0,
-        end = 10;
+        end = 30;
 
     if (req.params.operation) {
-        model.getDvdList(req.params.id, start, end, function(err, dvds) {
+        model.getDvdTitlesBarcodes(req.params.id, 'mydvds', start, end, function(err, dvds) {
             if (err) {
                 log.error(err);
             } else {
-                res.send("Dvds:" + util.inspect(dvds));
+                res.send(JSON.stringify(dvds));
             }
         });
 

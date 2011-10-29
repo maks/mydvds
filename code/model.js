@@ -11,9 +11,9 @@ var log = require('nlogger').logger(module),
 /**
  *
  */
-function getDvdTitlesBarcodes(userId, start, end, callback) {
+exports.getDvdTitlesBarcodes = function(userId, collection, start, end, callback) {
 
-    client.sort(['collection',userId,'mydvds'].join(':'),
+    client.sort(['collection',userId, collection].join(':'),
         'LIMIT', start, end,
         'GET', 'dvd:*->title',
         'GET', 'dvd:*->barcode',
@@ -34,14 +34,12 @@ function getDvdTitlesBarcodes(userId, start, end, callback) {
     );
 }
 
-exports.getDvdList = function(userId, start, end, callback) {
-    //~ client.zrange(['collection',userId,'mydvds'].join(':'), start, end, function(err, data) {
-        //~ if (err) {
-            //~ callback(err, null);
-        //~ } else {
-
-            //~ callback(null, data);
-        //~ }
-    //~ });
-    getDvdTitlesBarcodes(userId, start, end, callback);
+exports.addDvdToCollection = function(userId, collection, dvdID, callback) {
+    client.zadd(['collection',userId,collection].join(':'), dvdID, function(err, data) {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, data);
+        }
+    });
 };
