@@ -13,17 +13,22 @@ var log = require('nlogger').logger(module),
     model = require('./model'),
     misc = require('./misc'),
 
-    PORT = 3000; //FIXME - put into env specific config
+    PORT,
+    BLANK_COVER_PREFIX; 
 
 app.configure('development', function(){
     app.use(express.bodyParser());
     app.use(express.static('static'));
+    PORT = 3000;
+    BLANK_COVER_PREFIX = '../../icons/blank-cover-';
 });
 
 app.configure('production', function() {
     app.use(express.logger());
     app.use(express.bodyParser());
     app.use(express.static('/var/www/mydvds.com.au/html'));
+    PORT = 8080;
+    BLANK_COVER_PREFIX = '/var/www/mydvds.com.au/icons/blank-cover-';
 });
 
 log.info("serving static from:"+ 'static');
@@ -46,8 +51,8 @@ app.get('/images/:size/:barcode.jpg', function(req, res, next){
         cachedImg,
         cdnServerNumber = misc.getRandomInt(1,4),
         imagePath = ['static/images',req.params.size,req.params.barcode].join('/')+'.jpg',
-        options = {url: 'http://cdn'+cdnServerNumber+'.fishpond.co.nz/'+req.params.barcode+sizeUrls[req.params.size]},
-        BLANK_COVER_LINK = '../icons/blank-cover-'+req.params.size+'.jpg';
+        blankCoverPath = BLANK_COVER_PREFIX+req.params.size+'.jpg',
+        options = {url: 'http://cdn'+cdnServerNumber+'.fishpond.co.nz/'+req.params.barcode+sizeUrls[req.params.size]};
 
     if (path.existsSync(imagePath)) {
         log.info("found cached image:"+req.params.barcode+"["+req.params.size+"]");
@@ -58,9 +63,9 @@ app.get('/images/:size/:barcode.jpg', function(req, res, next){
             if (error) {
                 console.error("Error downloading images:"+error);
                 try {
-                    fs.symlinkSync(BLANK_COVER_LINK, imagePath);
+                    fs.symlinkSync(blankCoverPath, imagePath);
                 } catch(err) {
-                    log.error("error linking "+BLANK_COVER_LINK+" to filepath "+imagePath+" :"+err);
+                    log.error("error linking "+blankCoverPath+" to filepath "+imagePath+" :"+err);
                 }
             } else {
                 console.log('File downloaded at: ' + result.file);
