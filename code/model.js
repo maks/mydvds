@@ -4,6 +4,7 @@
 "use strict";
 
 var log = require('nlogger').logger(module),
+    Step = require('step'),
     redis = require('redis'),
     client = redis.createClient();
 
@@ -32,7 +33,7 @@ exports.getDvdTitlesBarcodes = function(userId, collection, start, end, callback
             }
         }
     );
-}
+};
 
 exports.addDvdToCollection = function(userId, collection, dvdID, callback) {
     client.zadd(['collection',userId,collection].join(':'), dvdID, function(err, data) {
@@ -42,4 +43,38 @@ exports.addDvdToCollection = function(userId, collection, dvdID, callback) {
             callback(null, data);
         }
     });
+};
+
+exports.getUserCollectionCounts = function(userId, callback) {
+    var collections = [];
+    Step(
+        function getCollectionKeys() {
+            client.keys('collection:'+userId+':*', this);
+        },
+        function getCollectionCounts(err, results) {
+            if (err) {
+               throw err;
+            } 
+            
+            var group = this.group(),
+                i;
+
+            console.log('res:'+JSON.stringify(results));
+            for( i=0; i < results.length;i++) {
+                collections[i] = { 'name' : results[i] };
+                client.zcard(results[i], group());
+            }
+        },
+        function collate(err, collectionCounts) {
+            var i;
+
+            if (err) {
+                throw err;
+            }
+            for(i=0; i < collectionCounts.length;i++) {
+                collections[i].count = collectionCounts[i];
+            }
+            callback(collections);
+        }
+    );
 };

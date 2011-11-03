@@ -14,7 +14,8 @@
         "request": "= 2.1.1",
         "http-get": "",
         "express" : "= 2.5.0",
-        "nlogger" : ""
+        "nlogger" : "",
+        "step": ""
     },
   "engine": "node 0.5.x"
 }
