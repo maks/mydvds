@@ -10,7 +10,7 @@ var log = require('nlogger').logger(module),
     http = require('http-get'),
     express = require('express'),
     app = express.createServer(),
-    model = require('./model'),
+    api = require('./api'),
     misc = require('./misc'),
 
     PORT,
@@ -84,13 +84,7 @@ app.get('/api/user/:id/:operation?', function(req, res){
         end = 30;
 
     if (req.params.operation) {
-        model.getDvdTitlesBarcodes(req.params.id, 'mydvds', start, end, function(err, dvds) {
-            if (err) {
-                log.error(err);
-            } else {
-                res.send(JSON.stringify(dvds));
-            }
-        });
+        api[req.params.operation](req.params.id, res, start, end);
 
     }
     //~ else {

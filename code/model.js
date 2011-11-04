@@ -68,13 +68,10 @@ exports.getUserCollectionCounts = function(userId, callback) {
         function collate(err, collectionCounts) {
             var i;
 
-            if (err) {
-                throw err;
-            }
             for(i=0; i < collectionCounts.length;i++) {
                 collections[i].count = collectionCounts[i];
             }
-            callback(collections);
+            callback(err, collections);
         }
     );
 };
