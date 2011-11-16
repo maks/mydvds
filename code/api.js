@@ -20,7 +20,7 @@ exports.collections = function(userId, res) {
         
 
 exports.dvds = function(userId, res, start, end) {
-    model.getDvdTitlesBarcodes(userId, 'mydvds', start, end, function(err, dvds) {
+    model.getUserDvdTitlesBarcodes(userId, 'mydvds', start, end, function(err, dvds) {
         if (err) {
             log.error(err);
         } else {
