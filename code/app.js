@@ -50,7 +50,7 @@ app.get('/images/:size/:barcode.jpg', function(req, res, next){
         },
         cachedImg,
         cdnServerNumber = misc.getRandomInt(1,4),
-        imagePath = ['static/images',req.params.size,req.params.barcode].join('/')+'.jpg',
+        imagePath = ['static/covers',req.params.size,req.params.barcode].join('/')+'.jpg',
         blankCoverPath = BLANK_COVER_PREFIX+req.params.size+'.jpg',
         options = {url: 'http://cdn'+cdnServerNumber+'.fishpond.co.nz/'+req.params.barcode+sizeUrls[req.params.size]};
 
@@ -61,14 +61,14 @@ app.get('/images/:size/:barcode.jpg', function(req, res, next){
         log.info("no cached image, fetching..."+options.url);
         http.get(options, imagePath, function (error, result) {
             if (error) {
-                console.error("Error downloading images:"+error);
+                log.error("Error downloading images:"+error);
                 try {
                     fs.symlinkSync(blankCoverPath, imagePath);
                 } catch(err) {
                     log.error("error linking "+blankCoverPath+" to filepath "+imagePath+" :"+err);
                 }
             } else {
-                console.log('File downloaded at: ' + result.file);
+                log.info('File downloaded at: ' + result.file);
             }
             res.sendfile(imagePath);
         });
@@ -76,13 +76,14 @@ app.get('/images/:size/:barcode.jpg', function(req, res, next){
 });
 
 
-app.get('/api/user/:id/:operation?', function(req, res){
+app.get('/api/user/:id/:operation?/:start?/:end?', function(req, res){
     var user,
         dvds,
         dvdList,
-        start = 0,
-        end = 30;
+        start = req.params.start,
+        end = req.params.end;
 
+        log.debug('s'+start+'e'+end);
     if (req.params.operation) {
         api[req.params.operation](req.params.id, res, start, end);
 

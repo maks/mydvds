@@ -12,13 +12,35 @@ h3. Fields
 * lastname (string)
 * joinDate (date)
 * lastLogin (datetime)
-* status (string enum: pending, confirmed, subscriber)
 * referredBy (user_id)
 
-h3. All Users
+h3. Counters
+
+h4. users_maxid
+
+h3. Indexes
+
+h4. All Users
 
 *Type:* SET
 *Keyname:* users_all
+
+h4. Subscribers
+
+*Type:* SET
+*Keyname:* users_subscribers
+
+h4. Confirmed Users
+
+*Type:* SET
+*Keyname:* users_confirmed
+
+ 
+h4. Pending Users
+
+*Type:* SET
+*Keyname:* users_pending
+
 
 
 h2. Dvds
@@ -78,6 +100,12 @@ set of their dvds within a collection.
 A list of all users collections is not kept, instad can be fetched using redis
 keys wildcarded search.
 
+h3. Lists/Sets
+
+There is a set of collection names for each user.
+
+*Type:* SET
+*Keyname:* user:<user_id>:collections
 
 h2. Friends
 
