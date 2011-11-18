@@ -50,7 +50,7 @@ app.get('/images/:size/:barcode.jpg', function(req, res, next){
         },
         cachedImg,
         cdnServerNumber = misc.getRandomInt(1,4),
-        imagePath = ['static/images',req.params.size,req.params.barcode].join('/')+'.jpg',
+        imagePath = ['static/covers',req.params.size,req.params.barcode].join('/')+'.jpg',
         blankCoverPath = BLANK_COVER_PREFIX+req.params.size+'.jpg',
         options = {url: 'http://cdn'+cdnServerNumber+'.fishpond.co.nz/'+req.params.barcode+sizeUrls[req.params.size]};
 
