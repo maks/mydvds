@@ -47,7 +47,7 @@ app.get('/api', function(req, res, next){
     next();
 });
 
-app.get('/images/:size/:barcode.jpg', function(req, res, next){
+app.get('/covers/:size/:barcode.jpg', function(req, res, next){
     var sizeUrls = {
             'small' : '-crop-120x120.jpg',
             'large' : '-crop-325x325.jpg'
