@@ -29,16 +29,16 @@ app.configure('production', function() {
     app.use(express.errorHandler());
     app.use(express.logger());
     app.use(express.bodyParser());
-    app.use(express.static('/var/www/mydvds.com.au/html'));
+    app.use(express.static('static'));
     PORT = 8080;
-    BLANK_COVER_PREFIX = '/var/www/mydvds.com.au/icons/blank-cover-';
+    BLANK_COVER_PREFIX = '/var/www/mydvds.com.au/app/static/icons/blank-cover-';
 });
 
 log.info("serving static from:"+ 'static');
 
 
 app.get('/', function(req, res, next){
-    res.redirect('/home.html');
+    res.redirect('/index.html');
 });
 
 app.get('/api', function(req, res, next){
