@@ -5,58 +5,84 @@
 
 var log = require('nlogger').logger(module),
     step = require('step'),
+    util = require('util'),
     redis = require('redis').createClient(),
+    misc = require('./misc'),
     User,
     Collection;
 
 
-function copyProps(propList, src, dest) {
-    var i;
-
-    if (!propList || (propList instanceof Array)) {
-        throw new Error('Invalid list of property names');
-    }
-    for(i=0; i < propList.length; i++) {
-        dest[i] = src[i];
-    }
-}
 
 /**
  * @param {Object} userdata
  * @param {Function} callback
  */
-User = exports.User = function(userdata, callback) {
+User = exports.User = function(userdata, id) {
     var d = userdata || {};
 
-    redis.incr('users_maxid', function(err,data) {
+    this.id = id || null;
+    this.joinDate = d.joinDate || new Date();
+    this.lastLogin = d.lastLogin || new Date();
 
-        this.id = data;
-        this.joinDate = new Date();
-        this.lastLogin = new Date();
-
-        copyProps(['email', 'firstname', 'lastname', 'referredBy'], d, this);
-        callback(err, this);
-    });
+    misc.copyProps(['email', 'firstname', 'lastname', 'referredBy'], d, this);
 };
+
+/**
+ * Lookup user in database mathcing the given criteria
+ *
+ * @param {String} fieldname 
+ * @param {String} value
+ */
+User.find = function(fieldname, value, callback) {
+    if (fieldname === 'id') { 
+        redis.hgetall('user:'+value, function(err, data) {
+            if (err) {
+                log.error("error fetching user data for:"+fieldname+"="+value);
+            }
+            log.debug("got user"+util.inspect(data));
+            var u = new User(data, value);
+            callback(err, u);
+        });
+    } else {
+        //TODO:
+    }
+};
+    
 
 /**
  * @param {Function} callback
  */
-User.save = function(callback) {
+User.prototype.save = function(callback) {
+    var self = this;
+
+    function savedata() {
         redis.multi()
-            .sadd(['user', this.id, 'collections'].join(':'), 'mydvds', 'loans', 'borrowed', 'wishlist', 'towatch')
-            .hmset(['user',this.id].join(':'), 
-                   'email', this.email,
-                   'firstname', this.firstname,
-                   'lastname', this.lastname,
-                   'joinDate', this.joinDate.getTime(),
-                   'lastLogin', this.lastLogin.getTime()
+            .sadd(['user', self.id, 'collections'].join(':'), 'mydvds', 'loans', 'borrowed', 'wishlist', 'towatch')
+            .hmset(['user',self.id].join(':'), 
+                   'email', self.email,
+                   'firstname', self.firstname,
+                   'lastname', self.lastname,
+                   'joinDate', self.joinDate.getTime(),
+                   'lastLogin', self.lastLogin.getTime()
                   )
-            .sadd('users_all', this.id)
-            .sadd('users_pending', this.id)
+            .sadd('users_all', self.id)
+            .sadd('users_pending', self.id)
         .exec(function(err) {
-            callback(err, this);
+            callback(err, self);
         });
+    }
+    
+    if (this.id) {//do we already have an ID allocated to us?
+        savedata();
+    } else {
+        redis.incr('users_maxid', function(err, data) {
+            var userid = data;
+            if (err) {
+                throw err;
+            }
+            savedata();
+        });
+    }
 };
 
 
@@ -69,8 +95,7 @@ User.save = function(callback) {
  *  data {Array} of {Object}, each {Object} has title and barcode {String} properties.
  *
  */
-User.getDvdTitlesBarcodes = function(collection, start, end, callback) {
-
+User.prototype.getDvdTitlesBarcodes = function(collection, start, end, callback) {
     redis.sort(['collection', this.id, collection].join(':'),
         'BY', 'dvd:*->title',
         'LIMIT', (start || 0), (end || 10),
@@ -100,7 +125,7 @@ User.getDvdTitlesBarcodes = function(collection, start, end, callback) {
  * @param {Function}  callback
  *
  */
-User.addDvdToCollection = function(collection, dvdID, callback) {
+User.prototype.addDvdToCollection = function(collection, dvdID, callback) {
     redis.zadd([this.id, 'collection', collection].join(':'), dvdID, function(err, data) {
         if (err) {
             callback(err, null);
@@ -113,11 +138,12 @@ User.addDvdToCollection = function(collection, dvdID, callback) {
 /**
  * @param {Function}  callback
  */
-User.getCollectionCounts = function(callback) {
-    var collections = [];
+User.prototype.getCollectionCounts = function(callback) {
+    var collections = [],
+        self = this;
     step(
         function getCollectionKeys() {
-            redis.keys('collection:'+this.id+':*', this);
+            redis.keys('collection:'+self.id+':*', this);
         },
         function getCollectionCounts(err, results) {
             if (err) {

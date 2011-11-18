@@ -12,11 +12,13 @@ var log = require('nlogger').logger(module),
     app = express.createServer(),
     api = require('./api'),
     misc = require('./misc'),
+    model = require('./model'),
 
     PORT,
     BLANK_COVER_PREFIX; 
 
 app.configure('development', function(){
+    app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
     app.use(express.bodyParser());
     app.use(express.static('static'));
     PORT = 3000;
@@ -24,6 +26,7 @@ app.configure('development', function(){
 });
 
 app.configure('production', function() {
+    app.use(express.errorHandler());
     app.use(express.logger());
     app.use(express.bodyParser());
     app.use(express.static('/var/www/mydvds.com.au/html'));
@@ -32,6 +35,7 @@ app.configure('production', function() {
 });
 
 log.info("serving static from:"+ 'static');
+
 
 app.get('/', function(req, res, next){
     res.redirect('/home.html');
@@ -77,17 +81,23 @@ app.get('/images/:size/:barcode.jpg', function(req, res, next){
 
 
 app.get('/api/user/:id/:operation?/:start?/:end?', function(req, res){
-    var user,
-        dvds,
+    var dvds,
         dvdList,
         start = req.params.start,
         end = req.params.end;
 
         log.debug('s'+start+'e'+end);
-    if (req.params.operation) {
-        api[req.params.operation](req.params.id, res, start, end);
+        model.User.find('id', req.params.id, function(err, user) {
+            if (err) {
+                log.error('user lookup error:'+err);
+                throw new Error("could not find user for userid:"+req.params.id, res);
+            }
+            if (req.params.operation) {
+                log.debug("doing op:"+req.params.operation);
+                api[req.params.operation](user, res, start, end);
 
-    }
+            }
+        });
     //~ else {
         //~ client.hgetall('user:'+req.params.id, function (err, data) {
             //~ if (err) {
