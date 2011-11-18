@@ -10,7 +10,7 @@ function loadMydvdsData() {
             return;
         }
         $.each(data, function(key, val) {
-            items.push('<li id="' + key + '"> <img src="/images/small/'+
+            items.push('<li id="' + key + '"> <img src="/covers/small/'+
                 val.barcode+'.jpg">'+
                 val.title +
             '</li>');
