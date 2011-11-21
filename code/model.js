@@ -36,11 +36,12 @@ User = exports.User = function(userdata, id) {
 User.find = function(fieldname, value, callback) {
     if (fieldname === 'id') { 
         redis.hgetall('user:'+value, function(err, data) {
+            var u;
             if (err) {
                 log.error("error fetching user data for:"+fieldname+"="+value);
             }
             log.debug("got user"+util.inspect(data));
-            var u = new User(data, value);
+            u = new User(data, value);
             callback(err, u);
         });
     } else {
