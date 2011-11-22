@@ -40,7 +40,7 @@ User.find = function(fieldname, value, callback) {
             if (err) {
                 log.error("error fetching user data for:"+fieldname+"="+value);
             }
-            log.debug("got user"+util.inspect(data));
+            //log.debug("got user"+util.inspect(data));
             u = new User(data, value);
             callback(err, u);
         });
