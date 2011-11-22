@@ -16,7 +16,8 @@
         "express" : "= 2.5.0",
         "nlogger" : "",
         "step": "",
-        "nohm": ""
+        "nohm": "",
+        "vows": ""
     },
   "engine": "node 0.5.x"
 }

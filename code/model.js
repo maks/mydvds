@@ -1,5 +1,4 @@
-/*global node:true */
-/*jshint globalstrict:true,  sub:true */
+/*jshint node:true, globalstrict:true,  sub:true */
 
 "use strict";
 
@@ -144,7 +143,7 @@ User.prototype.getCollectionCounts = function(callback) {
         self = this;
     step(
         function getCollectionKeys() {
-            redis.keys('collection:'+self.id+':*', this);
+            redis.smembers(['user',self.id,'collections'].join(':'), this);
         },
         function getCollectionCounts(err, results) {
             if (err) {
@@ -156,9 +155,8 @@ User.prototype.getCollectionCounts = function(callback) {
 
             console.log('res:'+JSON.stringify(results));
             for( i=0; i < results.length;i++) {
-                collections[i] = { 'name' : results[i].replace(/^(.*:)+/,'') };
-                console.log('repl:'+results[i].replace(/^(.*:)+/,''));
-                redis.zcard(results[i], group());
+                collections[i] = { 'name' : results[i] };
+                redis.zcard(['collection',self.id,results[i]].join(':'), group());
             }
         },
         function collate(err, collectionCounts) {
