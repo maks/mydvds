@@ -29,6 +29,9 @@ vows.describe('Data Model').addBatch({
             'collection counts for user 1 is 1 long': function(err, result) {
                 assert.equal(result.length, 5);
             },
+            'mydvds collection is the first item': function(err, result) {
+                assert.equal(result[0].name, 'mydvds');
+            },
             'collection counts for mydvds is 249': function(err, result) {
                 var i,
                     found = false;

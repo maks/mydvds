@@ -143,7 +143,7 @@ User.prototype.getCollectionCounts = function(callback) {
         self = this;
     step(
         function getCollectionKeys() {
-            redis.smembers(['user',self.id,'collections'].join(':'), this);
+            redis.zrange(['user',self.id,'collections'].join(':'), 0, -1, this);
         },
         function getCollectionCounts(err, results) {
             if (err) {
