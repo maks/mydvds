@@ -4,6 +4,7 @@
 
 var vows = require('vows'),
     assert = require('assert'),
+    redis = require('redis').createClient(),
     model = require('../code/model'),
     userOne;
 
@@ -37,6 +38,16 @@ exports.suite1.addBatch({
             'results in User with an id assigned': function(err, user) {
                 assert.isNotNull(user.id);
                 assert.isNumber(user.id);
+            },
+            'Check Redis directly' : {
+                topic: function(err, user) {
+                           redis.hgetall(['user', user.id].join(':'), this.callback);
+                       },
+                'fetches correct user data from redis' : function(err, data) {
+                    assert.isNull(err);
+                    assert.include(data, 'email');
+                    assert.equal(data.email, 'test@foo.com');
+                }
             }
         }
     }
