@@ -58,7 +58,7 @@ User.prototype.save = function(callback) {
 
     function savedata() {
         assert.ok((self.id != undefined) && (self.id != null), "User ID must be defined and not null before saving to Redis");
-        assert.ok(self.id instanceof Number, "User ID must be a numeric value before saving to Redis");
+        assert.ok(typeof self.id == 'number', "User ID must be a numeric value before saving to Redis");
         redis.multi()
             .zadd(['user',self.id,'collections'].join(':'), 1, 'mydvds', 2, 'loaned' , 3 ,'borrowed' ,4 ,'wishlist' ,5 ,'towatch')
             .hmset(['user',self.id].join(':'), 
@@ -75,14 +75,15 @@ User.prototype.save = function(callback) {
         });
     }
     
-    if (this.id) {//do we already have an ID allocated to us?
+    if (self.id) {//do we already have an ID allocated to us?
         savedata();
     } else {
+        log.debug("getting next user id...");
         redis.incr('users_maxid', function(err, data) {
-            var userid = data;
             if (err) {
                 throw err;
             }
+            self.id = parseInt(data, 10);
             savedata();
         });
     }
