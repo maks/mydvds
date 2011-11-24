@@ -57,7 +57,7 @@ User.prototype.save = function(callback) {
 
     function savedata() {
         redis.multi()
-            .sadd(['user', self.id, 'collections'].join(':'), 'mydvds', 'loans', 'borrowed', 'wishlist', 'towatch')
+            .zadd(['user',self.id,'collections'].join(':'), 1, 'mydvds', 2, 'loaned' , 3 ,'borrowed' ,4 ,'wishlist' ,5 ,'towatch')
             .hmset(['user',self.id].join(':'), 
                    'email', self.email,
                    'firstname', self.firstname,
@@ -153,7 +153,6 @@ User.prototype.getCollectionCounts = function(callback) {
             var group = this.group(),
                 i;
 
-            console.log('res:'+JSON.stringify(results));
             for( i=0; i < results.length;i++) {
                 collections[i] = { 'name' : results[i] };
                 redis.zcard(['collection',self.id,results[i]].join(':'), group());

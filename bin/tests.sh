@@ -1,4 +1,4 @@
 #!/bin/sh
 
-node_modules/vows/bin/vows tests/testModel.js
+node_modules/vows/bin/vows tests/* --spec
 

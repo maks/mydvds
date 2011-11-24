@@ -10,7 +10,7 @@ exports.copyProps = function(propList, src, dest) {
         throw new Error('Invalid list of property names');
     }
     for(i=0; i < propList.length; i++) {
-        dest[i] = src[i];
+        dest[propList[i]] = src[propList[i]];
     }
 };
 
