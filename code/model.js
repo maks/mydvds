@@ -35,7 +35,7 @@ User = exports.User = function(userdata, id) {
     this.joinDate = d.joinDate || new Date();
     this.lastLogin = d.lastLogin || new Date();
 
-    misc.copyProps(['email', 'firstname', 'lastname', 'referredBy'], d, this);
+    misc.copyProps(['email', 'password', 'firstname', 'lastname', 'referredBy'], d, this);
 };
 
 /**
