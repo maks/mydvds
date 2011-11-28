@@ -1,10 +1,15 @@
 /*global $:true, jQuery:true */
 
-var items = [];
+var items = [],
+    user;
 
 
 function loadMydvdsData() {
-    $.getJSON('/api/user/1/dvds/50/70', function(data) {
+    if (!user) {
+        console.error('Not logged in!');
+        return;
+    }
+    $.getJSON('/api/user/'+user.id+'/dvds/50/70', function(data) {
         //console.log("data:"+ data);)
         if ($('ul.list').children() > 0) {
             return;
@@ -18,8 +23,13 @@ function loadMydvdsData() {
     });
 }
 
-function loadCollectionsData() {
-    $.getJSON('/api/user/1/collections', function(data) {
+function loadCollectionsData(callback) {
+    if (!user) {
+        console.error('Not logged in!');
+        return;
+    }
+    console.log('id:'+user.id);
+    $.getJSON('/api/user/'+user.id+'/collections', function(data) {
             console.log("coll:"+JSON.stringify(data));
             if ($('ul#collections').children() > 0) {
                 return;
@@ -29,8 +39,8 @@ function loadCollectionsData() {
                                            val.name+'<span class="ui-li-count">'+
                                            val.count+'</span></a></li>');
            });
-           $('ul#collections').listview('refresh');
 
+           callback();
     });
 }
 
@@ -47,8 +57,29 @@ function myDvdsInit() {
 
          $('ul.list').listview();
     });
-    loadCollectionsData();
-    loadMydvdsData();
+
+    $("#login").bind("submit", function() {
+        console.debug("doing login:"+$("#email").val());
+        $.post('/login', $('form#login').serialize(), 
+            function(data) {
+                console.debug('Logged In!');
+            })
+            .success(function(data) {
+                console.debug("login ok", data);
+                user = JSON.parse(data);
+
+                loadCollectionsData( function() {
+                    $.mobile.changePage('#main');
+                    
+                    loadMydvdsData();
+                });
+            })
+            .error(function(jqxhr, err, exp) { 
+                console.debug('Error in login',err);
+            });
+        return false;
+    });
+
 }
 
 $(myDvdsInit);

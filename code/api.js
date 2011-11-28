@@ -1,9 +1,9 @@
-/*global node:true */
-/*jshint globalstrict:true,  sub:true */
+/*jshint node:true, globalstrict:true,  sub:true */
 
 "use strict";
 
 var log = require('nlogger').logger(module),
+    User = require('./model').User,
     util = require('util');
     
 exports.collections = function(user, res) {
@@ -33,4 +33,24 @@ exports.dvds = function(user, res, start, end) {
             }
         });
     }
+};
+
+exports.login = function(email, password, res) {
+
+    log.debug('lookup:'+email);
+    User.find('email', email, function(err, user) {
+        if (err || !user) {
+            log.error('could not lookup user:'+email+" "+err);
+            res.send('Invalid Login', 404);
+        } else {
+            if (password === user.password) {
+                log.debug("got login user:"+util.inspect(user));
+                res.send(JSON.stringify(user));
+            } else {
+                log.debug("Invalid password for:"+util.inspect(user));
+            }
+
+        }
+    });
+
 };

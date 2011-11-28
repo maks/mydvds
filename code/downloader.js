@@ -13,7 +13,7 @@ exports.image = function(imageUrl, imageFilename, callback) {
 
     request({
         'uri': imageUrl,
-        'encoding' : 'binary',
+        'encoding' : 'binary'
         },
         function (error, response, body) {
 

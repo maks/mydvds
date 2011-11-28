@@ -12,6 +12,17 @@ var log = require('nlogger').logger(module),
     Collection;
 
 
+function getUser(id, callback) {
+        redis.hgetall('user:'+id, function(err, data) {
+            var u;
+            if (err) {
+                log.error("error fetching user data for ID:"+id);
+            }
+            //log.debug("got user"+util.inspect(data));
+            u = new User(data, id);
+            callback(err, u);
+        });
+}
 
 /**
  * @param {Object} userdata
@@ -35,19 +46,20 @@ User = exports.User = function(userdata, id) {
  */
 User.find = function(fieldname, value, callback) {
     if (fieldname === 'id') { 
-        redis.hgetall('user:'+value, function(err, data) {
-            var u;
-            if (err) {
-                log.error("error fetching user data for:"+fieldname+"="+value);
+        getUser(value, callback);
+    } else if (fieldname === 'email') {
+        redis.get('user:email:'+value, function(err, data) {
+            if (err || !data) {
+                log.error('no key for user:email:'+value);
+                callback(err, null);
+            } else {
+                getUser(data, callback);
             }
-            //log.debug("got user"+util.inspect(data));
-            u = new User(data, value);
-            callback(err, u);
         });
-    } else {
-        //TODO:
     }
 };
+
+
     
 
 /**
@@ -57,7 +69,7 @@ User.prototype.save = function(callback) {
     var self = this;
 
     function savedata() {
-        assert.ok((self.id != undefined) && (self.id != null), "User ID must be defined and not null before saving to Redis");
+        assert.ok((self.id !== undefined) && (self.id !== null), "User ID must be defined and not null before saving to Redis");
         assert.ok(typeof self.id == 'number', "User ID must be a numeric value before saving to Redis");
         redis.multi()
             .zadd(['user',self.id,'collections'].join(':'), 1, 'mydvds', 2, 'loaned' , 3 ,'borrowed' ,4 ,'wishlist' ,5 ,'towatch')
@@ -70,6 +82,7 @@ User.prototype.save = function(callback) {
                   )
             .sadd('users_all', self.id)
             .sadd('users_pending', self.id)
+            .set('user:email:'+self.email, self.id)
         .exec(function(err) {
             callback(err, self);
         });

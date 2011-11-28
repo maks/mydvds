@@ -39,12 +39,22 @@ log.info("serving static from:"+ 'static');
 
 app.get('/', function(req, res, next){
     res.redirect('/index.html');
+
 });
 
 app.get('/api', function(req, res, next){
     //FIXME authenticate user
 
     next();
+});
+
+app.post('/login', function(req,res,next) {
+    var email = req.body.email,
+        password = req.body.password;
+
+    log.info('login:'+email+'|'+password);
+    
+    api.login(email, password, res);
 });
 
 app.get('/covers/:size/:barcode.jpg', function(req, res, next){

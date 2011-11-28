@@ -17,6 +17,29 @@
 </head>
 <body>
 
+<div id="start" data-role="page">
+
+    <div data-role="header" >
+        <h1 >Login</h1>
+    </div>
+    <div class="content" data-role="content">
+        <form id="login" action="/login" method="post" >
+                <fieldset>
+                    <label for="email" >Email</label>
+                    <input id="email" name="email" type="email"/>
+
+                    <label for="password" >Password</label>
+                    <input id="password" name="password" type="password" />
+
+                    <button type="submit" name="submit" >Login</button>
+                </fieldset>
+        </form>
+        <hr />
+        Don't have a login? <a href="/register">Register now</a>
+
+    </div>
+</div>
+
 <div id="main" data-role="page">
     <div data-role="header" >
         <h1 >Your Collections</h1>
