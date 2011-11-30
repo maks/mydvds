@@ -41,7 +41,7 @@ function deploy() {
         });
 
         //restart upstart process with the same name
-        var cmd = 'initctl restart mydvds';
+        var cmd = 'sudo restart mydvds';
         log.info('restarting upstart process', cmd);
 
         exec(cmd, function(err, stdout, stderr) {
