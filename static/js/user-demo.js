@@ -9,7 +9,7 @@ function loadMydvdsData() {
         console.error('Not logged in!');
         return;
     }
-    $.getJSON('/api/user/'+user.id+'/dvds/50/70', function(data) {
+    $.getJSON('/api/user/'+user.id+'/dvds/0/249', function(data) {
         //console.log("data:"+ data);)
         if ($('ul.list').children() > 0) {
             return;

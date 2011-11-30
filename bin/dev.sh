@@ -1,4 +1,5 @@
 #!/bin/sh
 
-export NODE_ENV="development"
-node code/app.js
+export PORT=8080
+export BLANK_COVER_PREFIX="../../icons/blank-cover-"
+node code/server.js

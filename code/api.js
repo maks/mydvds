@@ -54,3 +54,22 @@ exports.login = function(email, password, res) {
     });
 
 };
+
+exports.register = function(userdata, res) {
+    User.find('email', userdata.email, function(err, data) {
+        if(err) {
+        }
+        if (data) {
+            res.send("That email address is already registered", 404);
+            return;
+        }
+        var nuUser = new User(userdata);
+        if (nuUser) {
+            nuUser.save(function() {
+
+            });
+        } else {
+            res.send("Sorry an error occured during registration, please try again", 404);
+        }
+    });
+};
