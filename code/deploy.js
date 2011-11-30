@@ -15,10 +15,17 @@ var log = require('nlogger').logger(module),
         cwd: deployPath
     };
 
+http.createServer(function(req,res) {
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    deploy();
+    res.end('deployed\n');
+}).listen(process.env.PORT);
+
+console.log('Server running on port:'+process.env.PORT);
+
 //execute a git pull within the deployPath
 //and then execute an npm install
 function deploy() {
-    log.debug("deploying...");
     exec(command, options, function(error, stdout, stderr) {
         if (error) {
             return log.error(command, {
@@ -47,12 +54,3 @@ function deploy() {
 
     });
 }
-
-http.createServer( function(req,res) {
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    deploy();
-    res.end('deployed\n');
-}).listen(process.env.PORT);
-
-console.log('Server running on port:'+process.env.PORT);
-

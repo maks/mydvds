@@ -1,7 +1,3 @@
 #!/bin/sh
-
-cd /var/www/mydvds/app
-
-git pull origin master
-npm install
-sudo restart mydvds
+export PORT=1337
+node tools/deploy.js
