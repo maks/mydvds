@@ -3,4 +3,4 @@
 export PORT=8080
 export BLANK_COVER_PREFIX="/var/www/mydvds/app/static/icons/blank-cover-"
 cd /var/www/mydvds/app
-node code/server.js 2>>  /var/log/nodejs/mydvds-error.log 1>> /var/log/nodejs/mydvds.log
+node lib/server.js 2>>  /var/log/nodejs/mydvds-error.log 1>> /var/log/nodejs/mydvds.log
