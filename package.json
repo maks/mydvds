@@ -7,7 +7,7 @@
         "email": "maks@manichord.com",
         "url": "http://manichord.com"
     },
-    "main": "app.js",
+    "main": "server.js",
     "dependencies": {
         "csv": "= 0.0.10",
         "redis": ">= 0.6.7",
