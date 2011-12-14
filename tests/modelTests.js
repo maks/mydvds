@@ -5,7 +5,7 @@
 var vows = require('vows'),
     assert = require('assert'),
     redis = require('redis').createClient(),
-    model = require('../code/model'),
+    model = require('../lib/model'),
     userOne;
 
 
