@@ -5,7 +5,7 @@
 
 var vows = require('vows'),
     assert = require('assert'),
-    misc = require('../code/misc');
+    misc = require('../lib/misc');
 
 
 exports.suite1 = vows.describe('misc utils');
