@@ -1,2 +1,2 @@
 find static/covers/small/ -lname '*' -exec ls {} \;
-#find static/covers/small/ -lname '*' -exec rm {} \;
+find static/covers/small/ -lname '*' -exec rm {} \;
